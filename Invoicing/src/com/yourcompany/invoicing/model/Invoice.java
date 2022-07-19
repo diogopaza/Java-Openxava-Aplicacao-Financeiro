@@ -1,6 +1,7 @@
 package com.yourcompany.invoicing.model;
 
 import java.time.*;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -36,11 +37,14 @@ public class Invoice {
 	@DefaultValueCalculator(CurrentLocalDateCalculator.class) // traz a data atual para o usuário
 	LocalDate date;
 	
+	@ManyToOne(fetch=FetchType.LAZY, optional = false)
+	Customer customer; 
+	
+	@ElementCollection
+	@ListProperties("product.number, product.description, quantity")
+	Collection<Detail> details;
+	
 	@Stereotype("MEMO")
-	String remarks;
-	
-	
-	
-	
+	String remarks;	
 
 }
