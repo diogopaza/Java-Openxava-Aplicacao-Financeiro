@@ -20,6 +20,12 @@ public class Product {
 	@Column(precision =10, scale=2, nullable=true)
 	BigDecimal price;
 	
+	@ManyToOne( 
+	        fetch=FetchType.LAZY, 
+	        optional=true) 
+	    @DescriptionsList 
+	    Category category;
+	
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
