@@ -1,0 +1,9 @@
+/*C4*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C5*/SET SCHEMA PUBLIC
+create table Invoicing.Invoice (oid varchar(32) not null, date date, number integer, remarks varchar(255), year integer, primary key (oid))
+SET SCHEMA INVOICING
+INSERT INTO INVOICE VALUES('4028b8818216d83d018216da69420000','2022-07-19',1,'faturando hoje',2022)
+COMMIT
+INSERT INTO INVOICE VALUES('4028b8818216d83d018216daa4440001','2022-07-19',3,'coloquei 3',2022)
+COMMIT
