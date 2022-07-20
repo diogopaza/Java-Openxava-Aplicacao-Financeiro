@@ -12,11 +12,12 @@ import com.yourcompany.invoicing.calculators.*;
 
 import lombok.*;
 
-@View(members = "year, number, date;" + "customer;" + "details;" + "remarks")
+//@View(members = "year, number, date;" + "customer;" + "details;" + "remarks")
+@View(members = "year, number, date," + "data {" + "customer;" + "details;" + "remarks" + "}")
 @Entity
 @Getter
 @Setter
-abstract public class CommercialDocument extends Identifiable{	
+abstract public class CommercialDocument extends Identifiable {
 
 	@Column(length = 4)
 	@DefaultValueCalculator(CurrentYearCalculator.class) // traz o ano atual já inserido para o usuário
@@ -33,15 +34,13 @@ abstract public class CommercialDocument extends Identifiable{
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@ReferenceView("Simple")
 	Customer customer;
+	
 
 	@ElementCollection
 	@ListProperties("product.number, product.description, quantity")
 	Collection<Detail> details;
-	
-	
+
 	@Stereotype("MEMO")
 	String remarks;
-	
-	
 
 }
