@@ -1,6 +1,10 @@
 package com.yourcompany.invoicing.model;
 
+import java.math.*;
+
 import javax.persistence.*;
+
+import org.openxava.annotations.*;
 
 import lombok.*;
 
@@ -11,5 +15,12 @@ public class Detail {
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	Product product;
+	
+	@Stereotype("MONEY")
+	@Depends("product.number, quantity")
+	public BigDecimal getAmount() {
+		if(product == null || product.getPrice() == null) return BigDecimal.ZERO;
+		return new BigDecimal(quantity).multiply(product.getPrice());
+	}
 
 }
