@@ -32,7 +32,7 @@ public class Detail {
 	
 	@Stereotype("MONEY")
 	@Depends("product.number, quantity")
-	public BigDecimal getValorTotal() {
+	public BigDecimal getAmount() {
 		if(pricePerUnit == null) return BigDecimal.ZERO;
 		return new BigDecimal(quantity).multiply(pricePerUnit);
 	}

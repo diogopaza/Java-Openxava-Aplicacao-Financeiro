@@ -1,9 +1,11 @@
 package com.yourcompany.invoicing.model;
 
+import java.math.*;
 import java.time.*;
 import java.util.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.openxava.annotations.*;
 import org.openxava.calculators.*;
@@ -34,11 +36,51 @@ abstract public class CommercialDocument extends Identifiable {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@ReferenceView("Simple")
 	Customer customer;
-	
 
+	/*
+	 * @ElementCollection
+	 * 
+	 * @ListProperties("product.number, product.description, quantity, pricePerUnit, "
+	 * + "valorTotal+[" + "commercialDocument.vatPercentage," +
+	 * "commercialDocument.vat," + "commercialDocument.totalAmount" + "]" )
+	 
 	@ElementCollection
-	@ListProperties("product.number, product.description, quantity, pricePerUnit, valorTotal")
-	Collection<Detail> details;
+	@ListProperties("product.number, product.description, quantity, pricePerUnit, amount+["
+			+ "commercialDocument.vatPercentage," + "commercialDocument.vat," + "commercialDocument.totalAmount" + "]")
+	Collection<Detail> details;*/
+	
+	@ElementCollection
+    @ListProperties(
+        "product.number, product.description, quantity, pricePerUnit, " +
+        "amount+[commercialDocument.vatPercentage, commercialDocument.vat, commercialDocument.totalAmount ]" )
+    private Collection<Detail> details;
+/*
+	@Digits(integer = 2, fraction = 0)
+	BigDecimal vatPercentage;
+
+	@ReadOnly
+	@Stereotype("MONEY")
+	@Calculation("sum(details.amount) * vatPercentage / 100")
+	BigDecimal vat;
+
+	@ReadOnly
+	@Stereotype("MONEY")
+	@Calculation("sum(details.amount) + vat")
+	BigDecimal totalAmount;*/
+	
+	@DefaultValueCalculator(VatPercentageCalculator.class)
+	@Digits(integer=2, fraction=0) // To indicate its size
+	BigDecimal vatPercentage;
+	   
+	@ReadOnly
+	@Stereotype("MONEY")
+	@Calculation("sum(details.amount) * vatPercentage / 100")
+	BigDecimal vat;
+
+	@ReadOnly
+	@Stereotype("MONEY")
+	@Calculation("sum(details.amount) + vat")    
+	BigDecimal totalAmount;    
 
 	@Stereotype("MEMO")
 	String remarks;
