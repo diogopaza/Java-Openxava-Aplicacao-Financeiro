@@ -95,9 +95,16 @@ abstract public class CommercialDocument extends Identifiable {
 	@ReadOnly
 	@Stereotype("MONEY")
 	@Calculation("sum(details.amount) + vat")
-	BigDecimal totalAmount;
+	BigDecimal totalAmount;	
+	
 
+	@org.hibernate.annotations.Formula("TOTALAMOUNT * 0.10")
+	@Setter(AccessLevel.NONE)
+	@Stereotype("MONEY")
+	BigDecimal estimatedProfit;
+	
 	@Stereotype("MEMO")
 	String remarks;
+	
 
 }
