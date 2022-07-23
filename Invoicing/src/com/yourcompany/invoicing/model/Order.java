@@ -8,12 +8,21 @@ import org.openxava.annotations.*;
 
 import lombok.*;
 
-@View(extendsView = "super.DEFAULT", members = "estimatedDeliveryDays, invoice {invoice}")
+@View(extendsView = "super.DEFAULT", members = "estimatedDeliveryDays, delivered, invoice {invoice}")
 @View(name = "NoCustomerNoInvoice", members = "year,number,date;" + "details;" + "remarks")
 
 @Entity
 @Getter
 @Setter
+@EntityValidator(
+		value=com.yourcompany.invoicing.validators.DeliveredToBeInInvoiceValidator.class,
+		properties= {
+				@PropertyValue(name="year"),
+				@PropertyValue(name="number"),
+				@PropertyValue(name="invoice"),
+				@PropertyValue(name="delivered")
+		}
+		)
 public class Order extends CommercialDocument {
 	
 	@Depends("date")
@@ -37,5 +46,8 @@ public class Order extends CommercialDocument {
 	@ManyToOne
 	@ReferenceView("NoCustomerNoOrders")
 	private Invoice invoice;
+	
+	@Column(columnDefinition="BOOLEAN DEFAULT FALSE")
+	boolean delivered;
 
 }
