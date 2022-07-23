@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import org.openxava.annotations.*;
+import org.openxava.util.*;
 
 import lombok.*;
 
@@ -26,7 +27,9 @@ import lombok.*;
 		 * @PropertyValue(name="invoice"),
 		 * 
 		 * @PropertyValue(name="delivered") } )
+		 * 
 		 */
+//@RemoveValidator(com.yourcompany.invoicing.validators.OrderRemoveValidator.class)
 public class Order extends CommercialDocument {
 
 	@Depends("date")
@@ -47,39 +50,33 @@ public class Order extends CommercialDocument {
 		setDeliveryDays(getEstimatedDeliveryDays());
 	}
 	/*
-	public void setInvoice(Invoice invoice) {
-	    if (invoice != null && !isDelivered()) { // The validation logic
-	        // The validation exception from Bean Validation
-	        throw new javax.validation.ValidationException(
-	            XavaResources.getString(
-	                "order_must_be_delivered",
-	                getYear(),
-	                getNumber()
-	            )
-	        );
-	    }
-	    this.invoice = invoice; // The regular setter assignment
-	}*/
+	 * public void setInvoice(Invoice invoice) { if (invoice != null &&
+	 * !isDelivered()) { // The validation logic // The validation exception from
+	 * Bean Validation throw new javax.validation.ValidationException(
+	 * XavaResources.getString( "order_must_be_delivered", getYear(), getNumber() )
+	 * ); } this.invoice = invoice; // The regular setter assignment }
+	 */
+
+	/*
+	 * @PrePersist @PreUpdate private void validate() throws Exception{ if(invoice
+	 * !=null && !isDelivered()) { throw new javax.validation.ValidationException(
+	 * XavaResources.getString( "order_must_be_delivered", getYear(), getNumber() )
+	 * ); } }
+	 */
 	
-/*
-	@PrePersist @PreUpdate
-	private void validate() throws Exception{
-		if(invoice !=null && !isDelivered()) {
+	 @AssertTrue( message="order_must_be_delivered" ) 
+	 private boolean isDeliveredToBeInvoiced() { 
+		 return invoice == null || isDelivered(); 
+		 }
+	 
+
+	@PreRemove 
+	private void validateOnRemove() {
+		if(invoice != null) {
 			throw new javax.validation.ValidationException(
-			XavaResources.getString(
-					"order_must_be_delivered",
-					getYear(),
-					getNumber()
-					)
-		);
+				XavaResources.getString(
+						"cannot_delete_order_with_invoice"));
 		}
-	}*/
-	
-	@AssertTrue(
-			message="order_must_be_delivered"
-			)
-	private boolean isDeliveredToBeInvoiced() {
-		return invoice == null || isDelivered();
 	}
 
 	@Column(columnDefinition = "INTEGER DEFAULT 1")
