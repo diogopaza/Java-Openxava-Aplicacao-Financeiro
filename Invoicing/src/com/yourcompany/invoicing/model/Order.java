@@ -3,6 +3,7 @@ package com.yourcompany.invoicing.model;
 import java.time.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.openxava.annotations.*;
 
@@ -13,41 +14,82 @@ import lombok.*;
 
 @Entity
 @Getter
-@Setter
-@EntityValidator(
-		value=com.yourcompany.invoicing.validators.DeliveredToBeInInvoiceValidator.class,
-		properties= {
-				@PropertyValue(name="year"),
-				@PropertyValue(name="number"),
-				@PropertyValue(name="invoice"),
-				@PropertyValue(name="delivered")
-		}
-		)
+@Setter /*
+		 * @EntityValidator(
+		 * value=com.yourcompany.invoicing.validators.DeliveredToBeInInvoiceValidator.
+		 * class, properties= {
+		 * 
+		 * @PropertyValue(name="year"),
+		 * 
+		 * @PropertyValue(name="number"),
+		 * 
+		 * @PropertyValue(name="invoice"),
+		 * 
+		 * @PropertyValue(name="delivered") } )
+		 */
 public class Order extends CommercialDocument {
-	
+
 	@Depends("date")
 	public int getEstimatedDeliveryDays() {
-		if(getDate().getDayOfYear() < 15) {
+		if (getDate().getDayOfYear() < 15) {
 			return 20 - getDate().getDayOfYear();
 		}
-		if(getDate().getDayOfWeek() == DayOfWeek.SUNDAY) return 2;
-		if(getDate().getDayOfWeek() == DayOfWeek.SATURDAY) return 3;
+		if (getDate().getDayOfWeek() == DayOfWeek.SUNDAY)
+			return 2;
+		if (getDate().getDayOfWeek() == DayOfWeek.SATURDAY)
+			return 3;
 		return 1;
 	}
-	
-	@PrePersist @PreUpdate
+
+	@PrePersist
+	@PreUpdate
 	private void recalculateDeliveryDays() {
 		setDeliveryDays(getEstimatedDeliveryDays());
 	}
+	/*
+	public void setInvoice(Invoice invoice) {
+	    if (invoice != null && !isDelivered()) { // The validation logic
+	        // The validation exception from Bean Validation
+	        throw new javax.validation.ValidationException(
+	            XavaResources.getString(
+	                "order_must_be_delivered",
+	                getYear(),
+	                getNumber()
+	            )
+	        );
+	    }
+	    this.invoice = invoice; // The regular setter assignment
+	}*/
 	
-	@Column(columnDefinition="INTEGER DEFAULT 1")
+/*
+	@PrePersist @PreUpdate
+	private void validate() throws Exception{
+		if(invoice !=null && !isDelivered()) {
+			throw new javax.validation.ValidationException(
+			XavaResources.getString(
+					"order_must_be_delivered",
+					getYear(),
+					getNumber()
+					)
+		);
+		}
+	}*/
+	
+	@AssertTrue(
+			message="order_must_be_delivered"
+			)
+	private boolean isDeliveredToBeInvoiced() {
+		return invoice == null || isDelivered();
+	}
+
+	@Column(columnDefinition = "INTEGER DEFAULT 1")
 	int deliveryDays;
-	
+
 	@ManyToOne
 	@ReferenceView("NoCustomerNoOrders")
 	private Invoice invoice;
-	
-	@Column(columnDefinition="BOOLEAN DEFAULT FALSE")
+
+	@Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
 	boolean delivered;
 
 }
