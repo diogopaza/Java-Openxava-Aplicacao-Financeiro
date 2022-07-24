@@ -34,7 +34,7 @@ public class Product {
 	Author author;
 	
 	@Column(length=13)
-	@ISBN
+	@ISBN(search=false)
 	String isbn;
 	
 	
