@@ -15,7 +15,7 @@ Princípio pragmático === não use o nome da classe em nome de mebros. Ex: na c
 O <strong>Commons Validator</strong> contém algoritmos de validação para endereços de e-mail, datas, URLs e assim por diante. O validador de commons.jar está incluído por padrão em projetos OpenXava. Exemplo de utilização: package com.yourcompany.invoicing.validators.ISBNValidator essa classe é usada junto com a anotação <em>Bean</em> disponível em com.yourcompany.invoicing.annotations.ISBN. Esse validador é uma anotação criada manualmente no projeto.
 
 <h3>Lista de Restrições Integradas da Validação de Bean.</h3>
-Uso de restrições integradas de validação de bean.
+<p>Uso de restrições integradas de validação de bean.</p>
 Restrição Uso:<br/>
 @Null	Especifica se a propriedade de configuração decorada com essa anotação deve ter um valor nulo. Essa restrição aceita qualquer tipo.
 @NotNull	Especifica se a propriedade de configuração decorada com essa anotação não deve ter um valor nulo. Ou seja, a propriedade é necessária. Essa restrição aceita qualquer tipo.
