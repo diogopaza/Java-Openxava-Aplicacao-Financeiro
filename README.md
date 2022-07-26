@@ -16,7 +16,7 @@ O <strong>Commons Validator</strong> contém algoritmos de validação para ende
 
 <h3>Lista de Restrições Integradas da Validação de Bean.</h3>
 Uso de restrições integradas de validação de bean.
-Restrição Uso:
+Restrição Uso:<br/>
 @Null	Especifica se a propriedade de configuração decorada com essa anotação deve ter um valor nulo. Essa restrição aceita qualquer tipo.
 @NotNull	Especifica se a propriedade de configuração decorada com essa anotação não deve ter um valor nulo. Ou seja, a propriedade é necessária. Essa restrição aceita qualquer tipo.
 @AssertTrue	Especifica se a propriedade de configuração decorada com essa anotação deve ser true. Os tipos de valores suportados são booleano e Booleano. Elementos nulos são considerados válidos.
